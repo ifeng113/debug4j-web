@@ -1,13 +1,14 @@
 <template>
   <lay-container>
     <div class="outer-wrap">
-      
       <div class="login-panel">
-        <img src="@/assets/logo.png" alt="Logo" />
+        <img src="@/assets/logo.png" alt="Logo"/>
         <lay-panel>
           <lay-quote style="text-align: left;">Debug4j 一款高效、便捷的 Java 调试工具。</lay-quote>
-          <lay-input class="login_input" prefix-icon="layui-icon-user" placeholder="用户名" v-model="username"></lay-input>
-          <lay-input class="login_input" prefix-icon="layui-icon-password" placeholder="密码" v-model="password"></lay-input>
+          <lay-input class="login_input" prefix-icon="layui-icon-user" placeholder="用户名"
+                     v-model="username"></lay-input>
+          <lay-input class="login_input" prefix-icon="layui-icon-password" placeholder="密码" v-model="password"
+                     type="password" password></lay-input>
           <lay-button class="login_btn" type="primary" @click="login()">进入</lay-button>
         </lay-panel>
       </div>
@@ -37,20 +38,29 @@ export default {
       password: "",
     }
   },
+  mounted() {
+    window.addEventListener('keydown', this.handleGlobalEnter);
+  },
+  beforeDestroy() {
+    window.removeEventListener('keydown', this.handleGlobalEnter);
+  },
   methods: {
+    handleGlobalEnter(event) {
+      if (event.key === 'Enter') {
+        this.login();
+      }
+    },
     login() {
       if (this.username !== "" && this.password !== "") {
         const userToken = btoa(this.username + ":" + this.password);
         webStorage.setItem('token', userToken);
-        api.getClients().then(
-          response => {
-            console.log(response.data);
-            // router.push('/index');
-          }
+        api.getClients().then(() => {
+              router.push('/index');
+            }
         ).catch(
-          err => {
-            console.log(err);
-          },
+            err => {
+              console.log(err);
+            },
         );
       } else {
         messageOnce.warning("Token invalid, 请输入用户名密码！");

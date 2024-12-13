@@ -1,5 +1,5 @@
 // Storage封装
-const STORAGE_KEY = 'dodo-master'
+const STORAGE_KEY = 'debug4j'
 export default {
     // 存储值
     setItem(key, value, module_name) {

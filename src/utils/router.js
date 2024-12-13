@@ -1,5 +1,6 @@
 /* eslint-disable */
-import { createRouter, createWebHashHistory } from 'vue-router';
+import {createRouter, createWebHashHistory} from 'vue-router';
+import {nextTick} from "vue";
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -33,7 +34,19 @@ const router = createRouter({
             path: '/:pathMatch(.*)',
             component: () => import("@/components/404.vue")
         }
-    ]
+    ],
+    scrollBehavior(to, from, savedPosition) {
+        if (to.hash) {
+            return nextTick().then(() => {
+                const element = document.querySelector(to.hash);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+                return false;
+            });
+        }
+        return { x: 0, y: 0 };
+    },
 })
 
 export default router
