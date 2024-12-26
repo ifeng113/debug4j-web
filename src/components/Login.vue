@@ -55,6 +55,9 @@ export default {
         const userToken = btoa(this.username + ":" + this.password);
         webStorage.setItem('token', userToken);
         api.getClients().then(() => {
+              let loginId = `id-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+              webStorage.setItem('loginId', loginId);
+
               router.push('/index');
             }
         ).catch(

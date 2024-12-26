@@ -1,24 +1,24 @@
 <template>
   <lay-panel>
-    <lay-row space="6">
+    <lay-row space="20">
       <lay-col md="6" sm="6" xs="6">
         <lay-space>
-          <lay-space style="font-weight: bold">应用名称：</lay-space>
-          <lay-select v-model="appValue" :items="appItem" :options="appItem" :show-search="true" @change="appChange"
+          <lay-space style="font-weight: bold; width: 100%;min-width: 70px;">应用名称：</lay-space>
+          <lay-select style="width: 100%" v-model="appValue" :items="appItem" :options="appItem" :show-search="true" @change="appChange"
                       :disabled="selectLock"></lay-select>
         </lay-space>
       </lay-col>
       <lay-col md="6" sm="6" xs="6">
         <lay-space>
-          <lay-space style="font-weight: bold">客户端IP：</lay-space>
-          <lay-select v-model="clientIpValue" :items="clientIpItem" :options="clientIpItem" :show-search="true"
+          <lay-space style="font-weight: bold; width: 100%;min-width: 70px;">客户端IP：</lay-space>
+          <lay-select style="width: 100%" v-model="clientIpValue" :items="clientIpItem" :options="clientIpItem" :show-search="true"
                       @change="clientIpChange" :disabled="selectLock"></lay-select>
         </lay-space>
       </lay-col>
       <lay-col md="8" sm="8" xs="8">
         <lay-space>
-          <lay-space style="font-weight: bold">客户端ID：</lay-space>
-          <lay-select class="select_uuid" v-model="clientIdValue" :items="clientIdItem" :options="clientIdItem"
+          <lay-space style="font-weight: bold; width: 100%;min-width: 70px;">客户端ID：</lay-space>
+          <lay-select style="width: 100%" v-model="clientIdValue" :items="clientIdItem" :options="clientIdItem"
                       :disabled="selectLock"></lay-select>
         </lay-space>
       </lay-col>
@@ -374,6 +374,10 @@ export default {
       api.getClients().then(response => {
         webStorage.clear("clients");
         webStorage.setItem("clients", response.data.data);
+        this.review();
+        this.loadProxy();
+        this.loadLog();
+        this.loadClass();
         let clientData = webStorage.getItem("clients");
         this.appItem = [];
         for (let i = 0; i < clientData.length; i++) {
@@ -396,6 +400,11 @@ export default {
         for (let i = 0; i < clientData.length; i++) {
           if (clientData[i].uniqueId === cacheAppInfo.clientIdValue) {
             removed = false;
+            if (clientData[i].debug4jMode === "process") {
+              cacheAppInfo.processSession = clientData[i].clientSessionId;
+            } else {
+              cacheAppInfo.threadSession = clientData[i].clientSessionId;
+            }
           }
         }
         if (!removed) {
@@ -529,14 +538,14 @@ export default {
           for (let i = 0; i < respData.length; i++) {
             this.codeAllDataSource.push({"className": respData[i]});
           }
-          let cacheAppInfo = webStorage.getItem("codeSearch");
-          if (cacheAppInfo !== undefined){
-            this.codeSearch = cacheAppInfo;
+          let codeSearch = webStorage.getItem("codeSearch");
+          if (codeSearch !== undefined){
+            this.codeSearch = codeSearch;
           }
           this.codeSearchChange();
         }).catch(
             () => {
-              messageOnce.warning("日志监听列表获取失败，请刷新页面重试！");
+              messageOnce.warning("源码类列表获取失败，请刷新页面重试！");
             },
         );
       }
@@ -547,18 +556,10 @@ export default {
   },
   mounted: function () {
     this.loadClients();
-    this.review();
-    this.loadProxy();
-    this.loadLog();
-    this.loadClass();
   }
 }
 </script>
 
 <style>
-
-.select_uuid {
-  width: 300px;
-}
 
 </style>

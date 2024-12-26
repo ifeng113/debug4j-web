@@ -106,6 +106,12 @@ pnpm build
    pnpm install axios --save
    ```
 
+4. 安装 Codemirror：
+
+   ```bash
+   pnpm install codemirror-editor-vue3 codemirror@^5 --save
+   ```
+
 ## 注意事项
 
 - 请确保 Node.js 版本符合 Vue CLI 的最低要求。

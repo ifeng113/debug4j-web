@@ -21,9 +21,6 @@ class httpRequest {
         this.axiosInstance = axios.create();
         // 设置请求超时
         this.axiosInstance.defaults.timeout = 30000;
-        // 表示跨域请求时是否需要使用凭证
-        //  this.axiosInstance.defaults.withCredentials = true;
-        
         this.axiosInstance.defaults.baseURL = global.baseURL;
 
         // 设置 post 请求头    application/x-www-form-urlencoded;application/json;
