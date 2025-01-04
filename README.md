@@ -1,7 +1,7 @@
 # Debug4j-Web
 
 ## 简介
-Debug4j-Web 是 Debug4j-Server 可视化交互的前端 Web 页面。本 README 将指导您如何在本地环境中安装、开发和构建该项目。
+Debug4j-Web 是 [Debug4j-Server](https://github.com/ifeng113/debug4j) 可视化交互的前端 Web 页面。
 
 ## 系统要求
 
@@ -116,3 +116,4 @@ pnpm build
 
 - 请确保 Node.js 版本符合 Vue CLI 的最低要求。
 - 如果遇到依赖问题，请尝试删除 `node_modules` 文件夹和 `pnpm-lock.yaml` 文件，然后重新运行 `pnpm install`。
+
