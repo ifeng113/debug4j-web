@@ -12,6 +12,14 @@ const api = {
     deleteLog: (data) => httpRequest.post('/attach/task/close', data),
 
     getCodeClass: (data) => httpRequest.post('/attach/class', data),
+
+    getSource: (data) => httpRequest.post('/attach/source', data),
+    sourceUpdate: (data) => httpRequest.post('/attach/reload/source', data),
+    sourceByteUpdate: (data) => httpRequest.post('/attach/reload/class', data, {headers: {'Content-Type': 'multipart/form-data'}}),
+    sourceRestore: (data) => httpRequest.post('/attach/restore', data),
+
+    sourceLineLoad: (data) => httpRequest.post('/attach/source/method-line', data),
+    sourceLinePatch: (data) => httpRequest.post('/attach/patch/method-line', data),
 }
 
 export default api

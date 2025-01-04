@@ -32,13 +32,13 @@
     </lay-row>
     <lay-line></lay-line>
     <lay-row>
-      <lay-descriptions style="margin-top: 10px;font-style: italic;font-size: 12px">
-        <lay-descriptions-item label="【客户端主机名】：">{{ appInfo.socketClientHost }}</lay-descriptions-item>
-        <lay-descriptions-item label="【客户端外网IP】：">{{ appInfo.socketClientOutletIp }}</lay-descriptions-item>
-        <lay-descriptions-item label="【客户端进程ID】：">{{ appInfo.pid }}</lay-descriptions-item>
-        <lay-descriptions-item label="【远程调试端口】：">{{ appInfo.jdwpPort }}</lay-descriptions-item>
-        <lay-descriptions-item label="【线程通信session】：">{{ appInfo.threadSession }}</lay-descriptions-item>
-        <lay-descriptions-item label="【进程通信session】：">{{ appInfo.processSession }}</lay-descriptions-item>
+      <lay-descriptions :border="true" style="margin-top: 10px;font-size: 12px">
+        <lay-descriptions-item label="客户端主机名">{{ appInfo.socketClientHost }}</lay-descriptions-item>
+        <lay-descriptions-item label="客户端外网IP">{{ appInfo.socketClientOutletIp }}</lay-descriptions-item>
+        <lay-descriptions-item label="客户端进程ID">{{ appInfo.pid }}</lay-descriptions-item>
+        <lay-descriptions-item label="远程调试端口">{{ appInfo.jdwpPort }}</lay-descriptions-item>
+        <lay-descriptions-item label="线程通信session">{{ appInfo.threadSession }}</lay-descriptions-item>
+        <lay-descriptions-item label="进程通信session">{{ appInfo.processSession }}</lay-descriptions-item>
       </lay-descriptions>
     </lay-row>
   </lay-panel>
