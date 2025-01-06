@@ -21,6 +21,12 @@ class httpRequest {
         this.axiosInstance = axios.create();
         // 设置请求超时
         this.axiosInstance.defaults.timeout = 30000;
+
+        // 设置请求服务器地址
+        if (global.baseURL === undefined) {
+            global.baseURL = window.location.origin;
+        }
+        console.log("server：" + global.baseURL);
         this.axiosInstance.defaults.baseURL = global.baseURL;
 
         // 设置 post 请求头    application/x-www-form-urlencoded;application/json;
