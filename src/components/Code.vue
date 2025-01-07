@@ -156,11 +156,13 @@ export default {
     const cmOptions = {
       mode: "text/x-java",
       theme: "darcula",
+      indentUnit: 4,
       readOnly: true,
     };
     const cmCopyOptions = {
       mode: "text/x-java",
       theme: "darcula",
+      indentUnit: 4,
     };
 
     const codeUpdateEnable = ref(true);
