@@ -41,7 +41,7 @@ export default {
   mounted() {
     window.addEventListener('keydown', this.handleGlobalEnter);
   },
-  beforeDestroy() {
+  unmounted() {
     window.removeEventListener('keydown', this.handleGlobalEnter);
   },
   methods: {
