@@ -1,7 +1,7 @@
 <template>
-  <lay-layout style="height: 100%;background-color: #555555">
+  <lay-layout style="height: 100%;background-color: #444444">
     <lay-header style="height: auto">
-      <lay-panel style="background-color: #555555">
+      <lay-panel style="background-color: #444444">
         <lay-row space="20">
           <lay-col md="6" sm="6" xs="6">
             <lay-button type="primary" @click="sourceLoad">
@@ -48,7 +48,7 @@
         </lay-row>
       </lay-panel>
     </lay-header>
-    <lay-container style="width: 100%;height: 100%;background-color: #555555">
+    <lay-container style="width: 100%;height: 100%;background-color: #444444">
       <lay-split-panel style="width: 100%;height: 100%;">
         <lay-split-panel-item>
           <Codemirror id="sourceBox" v-model:value="sourceCode" :options="cmOptions" height="99.6%"/>
@@ -470,7 +470,7 @@ export default {
 
 .lay-split-panel-horizontal > .lay-split-panel-line {
   width: 5px;
-  background-color: #555555;
+  background-color: #444444;
 }
 
 .layui-input-block {

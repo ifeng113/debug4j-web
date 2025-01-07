@@ -1,11 +1,11 @@
 <template>
-  <lay-layout>
+  <lay-layout style="background-color: #444444">
     <lay-body style="height: 100%">
       <Codemirror id="logBox" v-model:value="code" :options="cmOptions" @change="onChange" @scroll="onScroll"
                   height="99.6%"/>
     </lay-body>
     <lay-footer>
-      <lay-panel style="margin-bottom: 5px;background-color: #333">
+      <lay-panel style="margin-bottom: 5px;background-color: #444444;border: 0">
         <lay-button @click="codeUpdateChange" :type="codeUpdate ? 'warm' : 'primary'">
           <lay-icon type="layui-icon-refresh"></lay-icon>&nbsp;{{ codeUpdate ? '关闭' : '开启' }}更新
         </lay-button>
