@@ -442,7 +442,7 @@ export default {
       this.proxyModelRef.validate((isValidate, model, errors) => {
         if (isValidate) {
           let proxyModel = this.proxyModel;
-          proxyModel.allowNetworks = proxyModel.allowNetworks.split('\n');
+          proxyModel.allowNetworks = proxyModel.allowNetworks.split('\n').filter(item => item !== "");
           proxyModel.clientSessionId = this.appInfo.processSession;
           api.addProxy(proxyModel).then(() => {
             this.loadProxy();
