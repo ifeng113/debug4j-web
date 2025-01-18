@@ -4,14 +4,16 @@
       <lay-col md="6" sm="6" xs="6">
         <lay-space>
           <lay-space style="font-weight: bold; width: 100%;min-width: 70px;">应用名称：</lay-space>
-          <lay-select style="width: 100%" v-model="appValue" :items="appItem" :options="appItem" :show-search="true" @change="appChange"
+          <lay-select style="width: 100%" v-model="appValue" :items="appItem" :options="appItem" :show-search="true"
+                      @change="appChange"
                       :disabled="selectLock"></lay-select>
         </lay-space>
       </lay-col>
-      <lay-col md="6" sm="6" xs="6">
+      <lay-col md="5" sm="5" xs="5">
         <lay-space>
           <lay-space style="font-weight: bold; width: 100%;min-width: 70px;">客户端IP：</lay-space>
-          <lay-select style="width: 100%" v-model="clientIpValue" :items="clientIpItem" :options="clientIpItem" :show-search="true"
+          <lay-select style="width: 100%" v-model="clientIpValue" :items="clientIpItem" :options="clientIpItem"
+                      :show-search="true"
                       @change="clientIpChange" :disabled="selectLock"></lay-select>
         </lay-space>
       </lay-col>
@@ -22,10 +24,13 @@
                       :disabled="selectLock"></lay-select>
         </lay-space>
       </lay-col>
-      <lay-col md="4" sm="4" xs="4">
+      <lay-col md="5" sm="5" xs="5">
         <lay-space :size="20">
           <lay-badge :value="!selectLock ? '' : 'debugging'" :ripple="selectLock">
-            <lay-button :type="!selectLock ? 'primary' : 'danger'" @click="debug">Debug</lay-button>
+            <lay-button :type="!selectLock ? 'primary' : 'danger'" @click="debug">
+              <lay-icon type="layui-icon-test"></lay-icon>
+              {{ !selectLock ? '开启' : '关闭' }}调试
+            </lay-button>
           </lay-badge>
         </lay-space>
       </lay-col>
@@ -72,6 +77,9 @@
             <lay-icon type="layui-icon-add-one"></lay-icon>&nbsp;新建代理
           </lay-button>
         </template>
+        <template v-slot:proxyOperator="{ row }">
+          <lay-button size="xs" type="danger" @click="proxyDelete(row.remoteHost, row.remotePort)">删除</lay-button>
+        </template>
       </lay-table>
     </lay-row>
   </lay-panel>
@@ -97,7 +105,7 @@
       </lay-table>
     </lay-row>
   </lay-panel>
-  <lay-panel  id="code">
+  <lay-panel id="code">
     <lay-row>
       <router-link to="#code">
         <lay-quote>
@@ -108,7 +116,8 @@
     <lay-row style="margin-top: 10px;">
       <lay-table :columns="codeColumns" :data-source="codeDataSource" :autoColsWidth="true" even>
         <template v-slot:toolbar>
-          <lay-input placeholder="请输入源码类名" v-model="codeSearch" :allow-clear="true" @clear="codeSearchChange" @input="codeSearchChange">
+          <lay-input placeholder="请输入源码类名" v-model="codeSearch" :allow-clear="true" @clear="codeSearchChange"
+                     @input="codeSearchChange">
             <template #prepend="{ disabled }">类名检索：</template>
           </lay-input>
         </template>
@@ -137,7 +146,7 @@
           <lay-input v-model="proxyModel.serverPort"></lay-input>
         </lay-form-item>
         <lay-form-item label="允许网段" prop="allowNetworks">
-          <lay-textarea style="white-space: pre-wrap;" :placeholder="'192.168.1.112/32\n192.168.1.113/32'"
+          <lay-textarea style="white-space: pre-wrap;" :placeholder="'例如：\n192.168.1.112/32\n192.168.1.113/32'"
                         v-model="proxyModel.allowNetworks"></lay-textarea>
           <lay-tag style="font-style: italic;font-size: small;" type="warm">注意：多网段请换行填写。</lay-tag>
         </lay-form-item>
@@ -221,11 +230,16 @@ export default {
         width: "120px",
         key: "clientOutletIps",
         customSlot: "clientOutletIpsSlot"
-      }, {
+      },
+      {
         title: "备注",
         width: "300px",
         key: "remark",
         ellipsisTooltip: true,
+      }, {
+        title: "操作",
+        width: "50px",
+        customSlot: "proxyOperator"
       }
     ]
     const proxyDataSource = ref([])
@@ -327,6 +341,10 @@ export default {
           this.appInfo.processSession = "";
           this.appInfo.threadSession = "";
           webStorage.clear("appInfo");
+
+          this.proxyDataSource = [];
+          this.logDataSource = [];
+          this.codeDataSource = [];
         } else {
           this.appInfo.appValue = this.appValue;
           this.appInfo.appItem = this.appItem;
@@ -339,7 +357,18 @@ export default {
           this.loadProxy();
           this.loadLog();
           this.loadClass();
+
+          let ping = {"clientSessionId": this.appInfo.threadSession}
+          api.ping(ping).then(() => {
+            messageOnce.success("已向客户端发送日志：receive ping uniqueId: " + this.appInfo.clientIdValue);
+          }).catch(
+              () => {
+                messageOnce.warning("客户端Ping失败，请刷新页面重试！");
+              },
+          );
         }
+      } else {
+        messageOnce.warning("请先选择应用客户端！");
       }
     },
     clientIpChange() {
@@ -431,12 +460,16 @@ export default {
       }
     },
     addProxyClick() {
-      this.addProxyOpen = !this.addProxyOpen;
-      this.proxyModel.remoteHost = "";
-      this.proxyModel.remotePort = "";
-      this.proxyModel.serverPort = "";
-      this.proxyModel.allowNetworks = "";
-      this.proxyModel.remark = "";
+      if (!this.selectLock) {
+        messageOnce.warning("请先选择客户端，并点击开始调试！");
+      } else {
+        this.addProxyOpen = !this.addProxyOpen;
+        this.proxyModel.remoteHost = "";
+        this.proxyModel.remotePort = "";
+        this.proxyModel.serverPort = "";
+        this.proxyModel.allowNetworks = "";
+        this.proxyModel.remark = "";
+      }
     },
     proxySubmit() {
       this.proxyModelRef.validate((isValidate, model, errors) => {
@@ -457,6 +490,16 @@ export default {
         }
       })
     },
+    proxyDelete(remoteHost, remotePort) {
+      let proxyModel = {"clientSessionId": this.appInfo.processSession, "remoteHost": remoteHost, "remotePort": remotePort};
+      api.removeProxy(proxyModel).then(() => {
+        this.loadProxy();
+      }).catch(
+          () => {
+            messageOnce.warning("代理删除失败，请重试！");
+          },
+      );
+    },
     loadLog() {
       if (this.appInfo.threadSession !== undefined) {
         let getLog = {"clientSessionId": this.appInfo.threadSession}
@@ -470,9 +513,13 @@ export default {
       }
     },
     addLogClick() {
-      this.addLogOpen = !this.addLogOpen;
-      this.logModel.filePath = "";
-      this.logModel.expire = "";
+      if (!this.selectLock) {
+        messageOnce.warning("请先选择客户端，并点击开始调试！");
+      } else {
+        this.addLogOpen = !this.addLogOpen;
+        this.logModel.filePath = "";
+        this.logModel.expire = "";
+      }
     },
     logSubmit() {
       this.logModelRef.validate((isValidate, model, errors) => {
@@ -507,23 +554,23 @@ export default {
         this.loadLog();
       }).catch(
           () => {
-            messageOnce.warning("日志监听失败失败，请重试！");
+            messageOnce.warning("日志监听删除失败，请重试！");
           },
       );
     },
     logReader(filePath) {
-      router.push({path: '/log', query: { clientSessionId: this.appInfo.threadSession, filePath: filePath } })
+      router.push({path: '/log', query: {clientSessionId: this.appInfo.threadSession, filePath: filePath}})
     },
     codeSearchChange() {
-      if (this.codeSearch !== ''){
+      if (this.codeSearch !== '') {
         this.codeDataSource = [];
         for (let i = 0; i < this.codeAllDataSource.length; i++) {
-          if (this.codeAllDataSource[i].className.toLowerCase().includes(this.codeSearch.toLowerCase())){
+          if (this.codeAllDataSource[i].className.toLowerCase().includes(this.codeSearch.toLowerCase())) {
             let codeAllDataSourceElement = this.codeAllDataSource[i];
             this.codeDataSource.push(codeAllDataSourceElement);
           }
         }
-        webStorage.setItem("codeSearch",this.codeSearch );
+        webStorage.setItem("codeSearch", this.codeSearch);
       } else {
         webStorage.clear("codeSearch");
         this.codeDataSource = this.codeAllDataSource;
@@ -539,7 +586,7 @@ export default {
             this.codeAllDataSource.push({"className": respData[i]});
           }
           let codeSearch = webStorage.getItem("codeSearch");
-          if (codeSearch !== undefined){
+          if (codeSearch !== undefined) {
             this.codeSearch = codeSearch;
           }
           this.codeSearchChange();
@@ -551,7 +598,7 @@ export default {
       }
     },
     codeReader(className) {
-      router.push({path: '/code', query: { clientSessionId: this.appInfo.threadSession, className: className } })
+      router.push({path: '/code', query: {clientSessionId: this.appInfo.threadSession, className: className}})
     }
   },
   mounted: function () {

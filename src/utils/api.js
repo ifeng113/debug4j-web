@@ -6,11 +6,13 @@ const api = {
 
     getProxy: (data) => httpRequest.get('/proxy/details?clientSessionId=' + data),
     addProxy: (data) => httpRequest.post('/proxy', data),
+    removeProxy: (data) => httpRequest.post('/proxy/remove', data),
 
     getLog: (data) => httpRequest.post('/attach/task', data),
     addLog: (data) => httpRequest.post('/attach/task/open', data),
     deleteLog: (data) => httpRequest.post('/attach/task/close', data),
 
+    ping: (data) => httpRequest.post('/attach/ping', data),
     getCodeClass: (data) => httpRequest.post('/attach/class', data),
 
     getSource: (data) => httpRequest.post('/attach/source', data),

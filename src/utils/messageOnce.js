@@ -6,20 +6,16 @@ export default class domMessage {
         layer.notify({
             title: "Success",
             content: content,
-            icon: 1
+            icon: 1,
+            time: 5000
         })
     }
     warning(content) {
         layer.notify({
             title: "Warming",
             content: content,
-            icon: 3
-        })
-    }
-    info(title, content) {
-        layer.notify({
-            title: title,
-            content: content
+            icon: 3,
+            time: 5000
         })
     }
     error(content) {
@@ -27,7 +23,7 @@ export default class domMessage {
             title: "Error",
             content: content,
             icon: 2,
-            time: 5000
+            time: 8000
         })
     }
 }

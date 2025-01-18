@@ -26,7 +26,6 @@ class httpRequest {
         if (global.baseURL === undefined) {
             global.baseURL = window.location.origin;
         }
-        console.log("server：" + global.baseURL);
         this.axiosInstance.defaults.baseURL = global.baseURL;
 
         // 设置 post 请求头    application/x-www-form-urlencoded;application/json;

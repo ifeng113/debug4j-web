@@ -80,7 +80,6 @@ export default {
       codeScroll,
       onChange,
       onScroll,
-
     }
   },
   data() {
@@ -88,6 +87,9 @@ export default {
   },
   methods: {
     loadLog() {
+      if (global.baseURL === undefined) {
+        global.baseURL = window.location.origin;
+      }
       this.es = new EventSource(global.baseURL + "/attach/task?path=" + this.filePath + "&sessionId=" + this.clientSessionId +
           "&token=" + webStorage.getItem('token') + "&loginId=" + webStorage.getItem('loginId'));
       this.es.onmessage = (event) => {
